@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Game {
     boolean left, right, x_key, z_key;
-    int next_piece = -1, left_counter = 7, right_counter = 7;
+    int next_piece = -1, das = 10, arr = 2;
     double gravity = 0.03125, drop = 0;
     int[][] board = new int[20][10];
 
@@ -33,18 +33,11 @@ public class Game {
         if(noPieceOnBoard())
             spawnNextPiece();
 
-        if(right){
+        if(right)
             tryMoveRight();
-        }
-        else{
-            board[0][9] = 0;
-        }
-        if(left){
-            board[0][0] = 1;
-        }
-        else{
-            board[0][0] = 0;
-        }
+
+        if(left)
+            tryMoveLeft();
 
         drop += gravity;
         if(drop > 1){
@@ -191,23 +184,13 @@ public class Game {
             System.arraycopy(copy[i], 0, board[i], 0, 10);
         return true;
     }
-    private int[][] getLoc(){
-        int[][] loc = new int[4][2];
-        int blocks = 0;
-
-        for(int i=0; i<20 && blocks<4; i++)
-            for(int j=0; j<10 && blocks<4; j++)
-                if(board[i][j]>1 && i<19 && board[i+1][j]!=1)
-                    loc[blocks++] = new int[]{i, j};
-        return loc;
-    }
     private void tryDropPiece(){
         int[][] loc = new int[4][2];
         int blocks = 0;
 
-        for(int i=0; i<20 && blocks<=4; i++)
-            for(int j=0; j<10 && blocks<=4; j++)
-                if(board[i][j]>1 && i<19 && board[i+1][j]!=1)
+        for(int i=0; i<19 && blocks<4; i++)
+            for(int j=0; j<10 && blocks<4; j++)
+                if(board[i][j]>1 && board[i+1][j]!=1)
                     loc[blocks++] = new int[]{i, j};
 
         if(blocks<4) setPiece();
@@ -228,11 +211,51 @@ public class Game {
             board[loc[i][0]+1][loc[i][1]] = piece;
     }
     private void tryMoveRight(){
-        right_counter--;
-        if(right_counter != 0) {
+        arr--;
+        if(arr>0)
             return;
-        }
-        right_counter = 7;
+        arr=2;
 
+        int[][] loc = new int[4][2];
+        int blocks = 0;
+
+        for(int i=0; i<20 && blocks<4; i++)
+            for(int j=0; j<9 && blocks<4; j++)
+                if(board[i][j]>1 && board[i][j+1]!=1)
+                    loc[blocks++] = new int[]{i, j};
+
+        if(blocks==4)doMoveRight(loc);
+    }
+    private void doMoveRight(int[][] loc){
+        int piece = board[loc[0][0]][loc[0][1]];
+        for(int i=0; i<4; i++)
+            board[loc[i][0]][loc[i][1]] = 0;
+
+        for(int i=0; i<4; i++)
+            board[loc[i][0]][loc[i][1]+1] = piece;
+    }
+    private void tryMoveLeft(){
+        arr--;
+        if(arr>0)
+            return;
+        arr=2;
+
+        int[][] loc = new int[4][2];
+        int blocks = 0;
+
+        for(int i=0; i<20 && blocks<4; i++)
+            for(int j=1; j<10 && blocks<4; j++)
+                if(board[i][j]>1 && board[i][j-1]!=1)
+                    loc[blocks++] = new int[]{i, j};
+
+        if(blocks==4)doMoveLeft(loc);
+    }
+    private void doMoveLeft(int[][] loc){
+        int piece = board[loc[0][0]][loc[0][1]];
+        for(int i=0; i<4; i++)
+            board[loc[i][0]][loc[i][1]] = 0;
+
+        for(int i=0; i<4; i++)
+            board[loc[i][0]][loc[i][1]-1] = piece;
     }
 }
