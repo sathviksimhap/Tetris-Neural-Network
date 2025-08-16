@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Game {
     boolean left, right, x_key, z_key;
-    int next_piece = -1, das = 10, arr = 2;
+    int next_piece = -1, arr = 2, left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0;
     double gravity = 0.03125, drop = 0;
     int[][] board = new int[20][10];
 
@@ -35,9 +35,13 @@ public class Game {
 
         if(right)
             tryMoveRight();
+        else
+            stopRight();
 
         if(left)
             tryMoveLeft();
+        else
+            stopLeft();
 
         drop += gravity;
         if(drop > 1){
@@ -211,6 +215,10 @@ public class Game {
             board[loc[i][0]+1][loc[i][1]] = piece;
     }
     private void tryMoveRight(){
+        if(piece_moved_right==1 && right_counter>0){
+            right_counter--;
+            return;
+        }
         arr--;
         if(arr>0)
             return;
@@ -227,6 +235,7 @@ public class Game {
         if(blocks==4)doMoveRight(loc);
     }
     private void doMoveRight(int[][] loc){
+        piece_moved_right++;
         int piece = board[loc[0][0]][loc[0][1]];
         for(int i=0; i<4; i++)
             board[loc[i][0]][loc[i][1]] = 0;
@@ -235,6 +244,10 @@ public class Game {
             board[loc[i][0]][loc[i][1]+1] = piece;
     }
     private void tryMoveLeft(){
+        if(piece_moved_left==1 && left_counter>0){
+            left_counter--;
+            return;
+        }
         arr--;
         if(arr>0)
             return;
@@ -251,11 +264,20 @@ public class Game {
         if(blocks==4)doMoveLeft(loc);
     }
     private void doMoveLeft(int[][] loc){
+        piece_moved_left++;
         int piece = board[loc[0][0]][loc[0][1]];
         for(int i=0; i<4; i++)
             board[loc[i][0]][loc[i][1]] = 0;
 
         for(int i=0; i<4; i++)
             board[loc[i][0]][loc[i][1]-1] = piece;
+    }
+    private void stopRight(){
+        right_counter = 10;
+        piece_moved_right = 0;
+    }
+    private void stopLeft(){
+        left_counter = 10;
+        piece_moved_left = 0;
     }
 }
