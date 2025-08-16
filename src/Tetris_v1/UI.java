@@ -5,19 +5,24 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ * Responsible for taking all inputs and formatting and displaying outputs
+ * Works with one game object
+ */
 public class UI{
     JTextArea play_area;
     JFrame frame;
     Game game;
 
     public UI(Game g){
-        game = g;
+        game = g;//links one ui object to one game object
         play_area = getPlayArea();
         frame = getFrame();
 
         frame.add(play_area);
 
         frame.addKeyListener(new KeyAdapter() {
+            //relays if keys are held
             @Override
             public void keyPressed(KeyEvent e) {
                 switch(e.getKeyCode()){
@@ -27,8 +32,15 @@ public class UI{
                     case KeyEvent.VK_RIGHT:
                         game.setRight(true);
                         break;
+                    case KeyEvent.VK_X:
+                        game.setX(true);
+                        break;
+                    case KeyEvent.VK_Z:
+                        game.setZ(true);
+                        break;
                 }
             }
+            //relays if keys are not held
             @Override
             public void keyReleased(KeyEvent e) {
                 switch(e.getKeyCode()){
@@ -38,12 +50,19 @@ public class UI{
                     case KeyEvent.VK_RIGHT:
                         game.setRight(false);
                         break;
+                    case KeyEvent.VK_X:
+                        game.setX(false);
+                        break;
+                    case KeyEvent.VK_Z:
+                        game.setZ(false);
+                        break;
                 }
             }
         });
 
         frame.setVisible(true);
     }
+    //Converts 2d int array of the board to formatted string
     public void setGameArea(int[][] board){
         StringBuilder sb = new StringBuilder();
 

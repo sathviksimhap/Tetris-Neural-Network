@@ -10,6 +10,7 @@ public class Main {
         Game game = new Game();
         UI display = new UI(game);
 
+        //Main Game Loop
         new Timer(Vals.FRAME_TIME, e->{
             long start = System.nanoTime();
 
