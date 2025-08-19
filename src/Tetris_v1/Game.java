@@ -1,7 +1,5 @@
 package Tetris_v1;
 
-import java.util.Arrays;
-
 /**
  * Responsible for all logic
  * Uses a 2D int array to represent the tetris board
@@ -65,10 +63,17 @@ public class Game {
         //Rotation
         if(x_key) {
             if (++x_held == 1)
-                tryRotateX();
+                tryRotate('x');
         }
         else
             x_held=0;
+
+        if(z_key) {
+            if (++z_held == 1)
+                tryRotate('z');
+        }
+        else
+            z_held=0;
 
         //Gravity
         drop += gravity;
@@ -91,7 +96,7 @@ public class Game {
         };
     }
     private int getNextPiece(){
-        if(true) return 1;
+        if(true) return 3;
 
         if(next_piece==-1){
             next_piece = (int) (Math.random()*7) + 1;
@@ -293,7 +298,7 @@ public class Game {
         left_counter = 10;
         piece_moved_left = 0;
     }
-    private void tryRotateX(){
+    private void tryRotate(char polarity){
         //Locate first block
         int new_i, new_j;
         int[] base_loc = getFirstBlock();
@@ -301,9 +306,12 @@ public class Game {
 
         //Find which piece it is and load appropriate rotation tables
         int piece = board[base_i][base_j];
-        int rotation = ((piece % 10) + 1) % 4;
+        int rotation = (piece % 10)% 4;
         piece = (piece / 10) - 1;
-        int[][] loc = Vals.x_rotation_table[piece][rotation];
+        int[][] loc;
+
+        if(polarity=='x') loc = Vals.x_rotation_table[piece][(rotation+1)%4];
+        else loc = Vals.z_rotation_table[piece][(rotation+3)%4];
 
         //Check if it can be rotated
         boolean can_rotate = true;
@@ -314,9 +322,9 @@ public class Game {
             if(!(new_i>=0 && new_i<20 && new_j>=0 && new_j<10) || board[new_i][new_j] == 1)
                 can_rotate = false;
         }
-        if(can_rotate)doRotateX(loc);
+        if(can_rotate) doRotate(loc, polarity);
     }
-    private void doRotateX(int[][] loc){
+    private void doRotate(int[][] loc, char polarity){
         //Locate first block
         int[] base_loc = getFirstBlock();
         int base_i = base_loc[0], base_j = base_loc[1];
@@ -324,7 +332,7 @@ public class Game {
         //Set current blocks to clear
         int blocks=0, piece = board[base_i][base_j];
         for(int i=base_i; i<20 && blocks<4; i++)
-            for(int j=base_j; j<10 && blocks<4; j++)
+            for(int j=0; j<10 && blocks<4; j++)
                 if(board[i][j]!=0){
                     blocks++;
                     board[i][j] = 0;
@@ -332,7 +340,8 @@ public class Game {
 
         int rem = (piece / 10) * 10;
         piece %= 10;
-        piece = ((piece + 1) % 4) + rem;
+        if(polarity=='x') piece = ((piece + 1) % 4) + rem;
+        else piece = ((piece + 3) % 4) + rem;
 
         //Setting new blocks
         for(int i=0; i<4; i++)
