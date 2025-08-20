@@ -13,7 +13,7 @@ package Tetris_v1;
 public class Game {
     int LOCKED = 1, FREE = 0;
     boolean left, right, x_key, z_key;
-    int next_piece = -1, arr = 2, x_held = 0, z_held = 0;
+    int next_piece = -1, arr = Vals.ARR, x_held = 0, z_held = 0;
     int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0;
     double gravity = 0.1, drop = 0;
     int[][] board = new int[20][10];
@@ -96,7 +96,7 @@ public class Game {
         };
     }
     private int getNextPiece(){
-        if(true) return 3;
+//        if(true) return 7;
 
         if(next_piece==-1){
             next_piece = (int) (Math.random()*7) + 1;
@@ -160,13 +160,13 @@ public class Game {
     private boolean placeSPiece(){
         //Check
         for(int i=0; i<2; i++)
-            for(int j=4+i; j<6+i; j++)
+            for(int j=5-i; j<7-i; j++)
                 if(board[i][j] != 0)
                     return false;
 
         //Set
         for(int i=0; i<2; i++)
-            for(int j=4+i; j<6+i; j++)
+            for(int j=5-i; j<7-i; j++)
                 board[i][j] = Vals.S_PIECE[0];
         return true;
     }
@@ -187,13 +187,13 @@ public class Game {
     private boolean placeZPiece(){
         //Check
         for(int i=0; i<2; i++)
-            for(int j=5-i; j<7-i; j++)
+            for(int j=4+i; j<6+i; j++)
                 if(board[i][j] != 0)
                     return false;
 
         //Set
         for(int i=0; i<2; i++)
-            for(int j=5-i; j<7-i; j++)
+            for(int j=4+i; j<6+i; j++)
                 board[i][j] = Vals.Z_PIECE[0];
         return true;
     }
@@ -234,7 +234,7 @@ public class Game {
         arr--;
         if(arr>0)
             return;
-        arr=2;
+        arr=Vals.ARR;
 
         int[][] loc = new int[4][2];
         int blocks = 0;
@@ -266,7 +266,7 @@ public class Game {
         arr--;
         if(arr>0)
             return;
-        arr=2;
+        arr=Vals.ARR;
 
         int[][] loc = new int[4][2];
         int blocks = 0;
@@ -290,12 +290,12 @@ public class Game {
     }
     private void stopRight(){
         //Reset DAS
-        right_counter = 10;
+        right_counter = Vals.DAS;
         piece_moved_right = 0;
     }
     private void stopLeft(){
         //Reset DAS
-        left_counter = 10;
+        left_counter = Vals.DAS;
         piece_moved_left = 0;
     }
     private void tryRotate(char polarity){
