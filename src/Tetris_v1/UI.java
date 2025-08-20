@@ -46,7 +46,6 @@ public class UI{
                 switch(e.getKeyCode()){
                     case KeyEvent.VK_LEFT:
                         game.setLeft(false);
-                        break;
                     case KeyEvent.VK_RIGHT:
                         game.setRight(false);
                         break;
@@ -91,6 +90,8 @@ public class UI{
         frame.setSize(1920, 1080);
         frame.getContentPane().setBackground(Color.DARK_GRAY);
         frame.setLayout(null);
+        frame.setFocusable(true);
+        frame.requestFocusInWindow();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         return frame;

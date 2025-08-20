@@ -3,7 +3,7 @@ package Tetris_v1;
 public final class  Vals {
     private Vals(){}
 
-    public static final int FRAME_TIME = 20, ARR = 3, DAS = 10;
+    public static final int FRAME_TIME = 20, ARR = 4, DAS = 10;
 
     public static final int[] I_PIECE = {10, 11, 12, 13};
     public static final int[] J_PIECE = {20, 21, 22 ,23};
@@ -71,7 +71,7 @@ public final class  Vals {
             {
                     {{2, -2}, {2, -1}, {2, 0}, {2, 1}},
                     {{-2, 2}, {-1, 2}, {0, 2}, {1, 2}},
-                    {{0, 0}, {0, 1}, {1, 0}, {2, 0}},
+                    {{2, -2}, {2, -1}, {2, 0}, {2, 1}},
                     {{-2, 2}, {-1, 2}, {0, 2}, {1, 2}}
             },
             //J-Piece

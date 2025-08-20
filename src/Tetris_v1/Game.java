@@ -13,9 +13,9 @@ package Tetris_v1;
 public class Game {
     int LOCKED = 1, FREE = 0;
     boolean left, right, x_key, z_key;
-    int next_piece = -1, arr = Vals.ARR, x_held = 0, z_held = 0;
+    int next_piece = -1, arr = 0, x_held = 0, z_held = 0;
     int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0;
-    double gravity = 0.1, drop = 0;
+    double gravity = 0.3, drop = 0;
     int[][] board = new int[20][10];
 
     int[][] getBoard(){
@@ -232,7 +232,7 @@ public class Game {
         }
         //Auto Repeat Rate
         arr--;
-        if(arr>0)
+        if(arr>0 && piece_moved_right > 0)
             return;
         arr=Vals.ARR;
 
@@ -264,7 +264,7 @@ public class Game {
         }
         //Auto Repeat Rate
         arr--;
-        if(arr>0)
+        if(arr>0 && piece_moved_left > 0)
             return;
         arr=Vals.ARR;
 
@@ -333,7 +333,7 @@ public class Game {
         int blocks=0, piece = board[base_i][base_j];
         for(int i=base_i; i<20 && blocks<4; i++)
             for(int j=0; j<10 && blocks<4; j++)
-                if(board[i][j]!=0){
+                if(board[i][j] > 1){
                     blocks++;
                     board[i][j] = 0;
                 }
