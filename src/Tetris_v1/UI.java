@@ -10,16 +10,18 @@ import java.awt.event.KeyEvent;
  * Works with one game object
  */
 public class UI{
-    JTextArea play_area;
+    JTextArea play_area, next_box;
     JFrame frame;
     Game game;
 
     public UI(Game g){
         game = g;//links one ui object to one game object
         play_area = getPlayArea();
+        next_box = getNextBox();
         frame = getFrame();
 
         frame.add(play_area);
+        frame.add(next_box);
 
         frame.addKeyListener(new KeyAdapter() {
             //relays if keys are held
@@ -58,7 +60,6 @@ public class UI{
                 }
             }
         });
-
         frame.setVisible(true);
     }
     //Converts 2d int array of the board to formatted string
@@ -75,6 +76,19 @@ public class UI{
         sb.deleteCharAt(sb.length()-1);
         play_area.setText(sb.toString());
     }
+    public void setNextBox(int[][] next_array){
+        StringBuilder sb = new StringBuilder("  NEXT  \n");
+
+        for(int[] line: next_array){
+            for (int c : line) {
+                if (c==0) sb.append("  ");
+                else sb.append("[]");
+            }
+            sb.append("\n");
+        }
+        sb.deleteCharAt(sb.length()-1);
+        next_box.setText(sb.toString());
+    }
     public JTextArea getPlayArea(){
         JTextArea play_area = new JTextArea(20, 10); // rows, columns
         play_area.setEditable(false);
@@ -84,6 +98,16 @@ public class UI{
         play_area.setBackground(Color.BLACK);
         play_area.setForeground(Color.WHITE);
         return play_area;
+    }
+    public JTextArea getNextBox(){
+        JTextArea next_box = new JTextArea(4, 4); // rows, columns
+        next_box.setEditable(false);
+        next_box.setFocusable(false);
+        next_box.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 30));
+        next_box.setBounds(1180, 440, 144, 130);
+        next_box.setBackground(Color.BLACK);
+        next_box.setForeground(Color.WHITE);
+        return next_box;
     }
     public JFrame getFrame(){
         JFrame frame = new JFrame("Tetris");

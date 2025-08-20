@@ -13,6 +13,16 @@ public final class  Vals {
     public static final int[] T_PIECE = {60, 61, 62, 63};
     public static final int[] Z_PIECE = {70, 71, 72, 73};
 
+    public static final int[][][] NEXT_PIECE = {
+            {{1, 1, 1, 1}, {0, 0, 0, 0}},
+            {{0, 1, 1, 1}, {0, 0, 0, 1}},
+            {{0, 1, 1, 1}, {0, 1, 0, 0}},
+            {{0, 1, 1, 0}, {0, 1, 1, 0}},
+            {{0, 0, 1, 1}, {0, 1, 1, 0}},
+            {{0, 0, 1, 0}, {0, 1, 1, 1}},
+            {{0, 1, 1, 0}, {0, 0, 1, 1}}
+    };
+
     //int[piece][rotation][blocks][cords]
     public static final int[][][][] x_rotation_table = {
             //I-Piece

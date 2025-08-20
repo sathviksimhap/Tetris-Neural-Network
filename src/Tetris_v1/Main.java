@@ -15,6 +15,7 @@ public class Main {
             long start = System.nanoTime();
 
             display.setGameArea(game.getBoard());
+            display.setNextBox(game.getNextBox());
 
             long time = (System.nanoTime() - start) / 1_000_000;
             if (time > Vals.FRAME_TIME) {

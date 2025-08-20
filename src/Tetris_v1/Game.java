@@ -11,16 +11,18 @@ package Tetris_v1;
  *     eg: 61 would be a T-piece rotated by 90 degrees *
  */
 public class Game {
-    int LOCKED = 1, FREE = 0;
     boolean left, right, x_key, z_key;
     int next_piece = -1, arr = 0, x_held = 0, z_held = 0;
     int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0;
-    double gravity = 0.3, drop = 0;
+    double gravity = 0.34, drop = 0;
     int[][] board = new int[20][10];
 
     int[][] getBoard(){
         processFrame();
         return board;
+    }
+    int[][] getNextBox(){
+        return Vals.NEXT_PIECE[next_piece-1];//converting to 0-indexed
     }
     //Input state tracking functions
     public void setLeft(boolean b){
@@ -79,7 +81,7 @@ public class Game {
         drop += gravity;
         if(drop > 1){
             tryDropPiece();
-            drop--;
+            drop = 0;
         }
     }
     private void spawnNextPiece(){
@@ -96,8 +98,6 @@ public class Game {
         };
     }
     private int getNextPiece(){
-//        if(true) return 7;
-
         if(next_piece==-1){
             next_piece = (int) (Math.random()*7) + 1;
             return (int) (Math.random()*7) + 1;
