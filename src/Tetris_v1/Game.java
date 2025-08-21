@@ -43,7 +43,7 @@ public class Game {
     public boolean noPieceOnBoard(){
         for(int i=0; i<20; i++)
             for(int j=0; j<10; j++)
-                if(board[i][j]>1)
+                if(board[i][j]>0 && board[i][j]<100)
                     return false;
         return true;
     }
@@ -204,7 +204,7 @@ public class Game {
         //Find and check if all blocks can move down
         for(int i=0; i<19 && blocks<4; i++)
             for(int j=0; j<10 && blocks<4; j++)
-                if(board[i][j]>1 && board[i+1][j]!=1)
+                if((board[i][j]>1 && board[i][j]<100) && (board[i+1][j]==0 || board[i+1][j]<100))
                     loc[blocks++] = new int[]{i, j};
 
         if(blocks<4) setPiece();
@@ -214,7 +214,7 @@ public class Game {
         for(int i=0; i<20; i++)
             for(int j=0; j<10; j++)
                 if(board[i][j]>1)
-                    board[i][j] = 1;
+                    board[i][j] += 100;
     }
     private void doDropPiece(int[][] loc){
         int piece = board[loc[0][0]][loc[0][1]];
@@ -242,8 +242,10 @@ public class Game {
         //Find location of all blocks
         for(int i=0; i<20 && blocks<4; i++)
             for(int j=0; j<9 && blocks<4; j++)
-                if(board[i][j]>1 && board[i][j+1]!=1)
+                if((board[i][j]>1 && board[i][j]<100) && (board[i][j+1]==0 || board[i][j+1]<100))
                     loc[blocks++] = new int[]{i, j};
+//        if((board[i][j]>1 && board[i][j]<100) && (board[i+1][j]==0 || board[i+1][j]<100))
+//            loc[blocks++] = new int[]{i, j};
 
         if(blocks==4)doMoveRight(loc);
     }
@@ -274,7 +276,7 @@ public class Game {
         //Find location of all blocks
         for(int i=0; i<20 && blocks<4; i++)
             for(int j=1; j<10 && blocks<4; j++)
-                if(board[i][j]>1 && board[i][j-1]!=1)
+                if((board[i][j]>1 && board[i][j]<100) && (board[i][j-1]==0 || board[i][j-1]<100))
                     loc[blocks++] = new int[]{i, j};
 
         if(blocks==4)doMoveLeft(loc);
@@ -319,7 +321,7 @@ public class Game {
             new_i = base_i + loc[i][0];
             new_j = base_j + loc[i][1];
             //   Boundary Checks.                                 Checking for collision with set pieces
-            if(!(new_i>=0 && new_i<20 && new_j>=0 && new_j<10) || board[new_i][new_j] == 1)
+            if(!(new_i>=0 && new_i<20 && new_j>=0 && new_j<10) || board[new_i][new_j] > 100)
                 can_rotate = false;
         }
         if(can_rotate) doRotate(loc, polarity);
@@ -333,7 +335,7 @@ public class Game {
         int blocks=0, piece = board[base_i][base_j];
         for(int i=base_i; i<20 && blocks<4; i++)
             for(int j=0; j<10 && blocks<4; j++)
-                if(board[i][j] > 1){
+                if(board[i][j]>0 && board[i][j]<100){
                     blocks++;
                     board[i][j] = 0;
                 }
@@ -350,7 +352,7 @@ public class Game {
     private int[] getFirstBlock(){
         for(int i=0; i<20; i++)
             for(int j=0; j<10; j++)
-                if(board[i][j]>1)
+                if(board[i][j]>0 && board[i][j]<100)
                     return new int[]{i, j};
         return null;
     }

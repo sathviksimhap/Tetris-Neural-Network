@@ -11,6 +11,9 @@ public class TetrisPanel extends JPanel {
     }
     @Override
     protected void paintComponent(Graphics g) {
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        if (board == null) return;
         super.paintComponent(g);
 
         int size = 32;
