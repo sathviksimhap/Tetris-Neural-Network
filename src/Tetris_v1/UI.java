@@ -10,18 +10,20 @@ import java.awt.event.KeyEvent;
  * Works with one game object
  */
 public class UI{
-    JTextArea play_area, next_box;
+    TetrisPanel play_area, next_box;
     JFrame frame;
     Game game;
 
     public UI(Game g){
         game = g;//links one ui object to one game object
         play_area = getPlayArea();
-        next_box = getNextBox();
+//        next_box = getNextBox();
         frame = getFrame();
 
+        System.out.println("play_area = " + play_area);
+
         frame.add(play_area);
-        frame.add(next_box);
+//        frame.add(next_box);
 
         frame.addKeyListener(new KeyAdapter() {
             //relays if keys are held
@@ -64,39 +66,28 @@ public class UI{
     }
     //Converts 2d int array of the board to formatted string
     public void setGameArea(int[][] board){
-        StringBuilder sb = new StringBuilder();
-
-        for(int[] line: board){
-            for (int c : line) {
-                if (c==0) sb.append("  ");
-                else sb.append("[]");
-            }
-            sb.append("\n");
-        }
-        sb.deleteCharAt(sb.length()-1);
-        play_area.setText(sb.toString());
+        play_area.setGameArea(board);
+        play_area.repaint();
     }
     public void setNextBox(int[][] next_array){
-        StringBuilder sb = new StringBuilder("  NEXT  \n");
-
-        for(int[] line: next_array){
-            for (int c : line) {
-                if (c==0) sb.append("  ");
-                else sb.append("[]");
-            }
-            sb.append("\n");
-        }
-        sb.deleteCharAt(sb.length()-1);
-        next_box.setText(sb.toString());
+//        StringBuilder sb = new StringBuilder("  NEXT  \n");
+//
+//        for(int[] line: next_array){
+//            for (int c : line) {
+//                if (c==0) sb.append("  ");
+//                else sb.append("[]");
+//            }
+//            sb.append("\n");
+//        }
+//        sb.deleteCharAt(sb.length()-1);
+//        next_box.setText(sb.toString());
     }
-    public JTextArea getPlayArea(){
-        JTextArea play_area = new JTextArea(20, 10); // rows, columns
-        play_area.setEditable(false);
+    public TetrisPanel getPlayArea(){
+        TetrisPanel play_area = new TetrisPanel();
+
         play_area.setFocusable(false);
-        play_area.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 30));
-        play_area.setBounds(780, 140, 360, 800);
+        play_area.setBounds(780, 140, 320, 640);
         play_area.setBackground(Color.BLACK);
-        play_area.setForeground(Color.WHITE);
         return play_area;
     }
     public JTextArea getNextBox(){
