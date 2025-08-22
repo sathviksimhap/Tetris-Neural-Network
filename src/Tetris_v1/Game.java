@@ -1,5 +1,7 @@
 package Tetris_v1;
 
+import java.util.Arrays;
+
 /**
  * Responsible for all logic
  * Uses a 2D int array to represent the tetris board
@@ -11,8 +13,8 @@ package Tetris_v1;
  *     eg: 61 would be a T-piece rotated by 90 degrees *
  */
 public class Game {
-    boolean left, right, x_key, z_key;
-    int next_piece = -1, arr = 0, x_held = 0, z_held = 0;
+    boolean left, right, x_key, z_key, clearing;
+    int next_piece = -1, arr = 0, x_held = 0, z_held = 0, clear_delay = 0;
     int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0;
     double gravity = 0.34, drop = 0;
     int[][] board = new int[20][10];
@@ -45,6 +47,8 @@ public class Game {
         return true;
     }
     private void processFrame(){
+        if(tryClearLine()) return;
+
         if(noPieceOnBoard())
             if(!spawnNextPiece())//either spawns next piece or throws exception
                 throw new RuntimeException("Game Over");
@@ -57,6 +61,43 @@ public class Game {
             tryDropPiece();
             drop = 0;
         }
+    }
+    private boolean tryClearLine(){
+        setClearLine();
+        if(!clearing)
+            return false;
+
+        if(clear_delay == 0){
+            doCLearLine();
+            clearing = false;
+            return false;
+        }
+        clear_delay--;
+        return true;
+    }
+    private void setClearLine(){
+        if(clearing) return;
+
+        boolean flag = false;
+        for(int i=19; i>=0; i--){
+            int sum = 0;
+
+            for(int j=0; j<10; j++)
+                if(board[i][j]>100 && board[i][j]<175) sum++;
+
+            if(sum==10){
+                flag = true;
+                for(int j=0; j<10; j++)
+                    board[i][j] = 180;
+            }
+        }
+        if(flag){
+            clear_delay = Vals.CLEAR_DELAY;
+            clearing = true;
+        }
+    }
+    private void doCLearLine(){
+
     }
     private void processInput(){
         //Movement
@@ -214,7 +255,7 @@ public class Game {
     private void setPiece(){
         for(int i=0; i<20; i++)
             for(int j=0; j<10; j++)
-                if(board[i][j]>1)
+                if(board[i][j]!=0 && board[i][j]<100)
                     board[i][j] += 100;
     }
     private void doDropPiece(int[][] loc){

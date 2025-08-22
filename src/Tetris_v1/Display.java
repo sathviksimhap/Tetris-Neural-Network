@@ -9,12 +9,12 @@ import java.awt.event.KeyEvent;
  * Responsible for taking all inputs and formatting and displaying outputs
  * Works with one game object
  */
-public class UI{
+public class Display {
     TetrisPanel play_area, next_box;
     JFrame frame;
     Game game;
 
-    public UI(Game g){
+    public Display(Game g){
         game = g;//links one ui object to one game object
         play_area = getPlayArea();
         next_box = getNextBox();

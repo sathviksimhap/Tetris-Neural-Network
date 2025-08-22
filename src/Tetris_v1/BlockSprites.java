@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class BlockSprites {
-    public static BufferedImage[] blocks = new BufferedImage[8];
+    public static BufferedImage[] blocks = new BufferedImage[9];
 
     static {
         try {
@@ -17,8 +17,9 @@ public class BlockSprites {
             blocks[5] = ImageIO.read(new File("C:\\Users\\sride\\IdeaProjects\\Tetris\\src\\resources\\S_piece.png"));
             blocks[6] = ImageIO.read(new File("C:\\Users\\sride\\IdeaProjects\\Tetris\\src\\resources\\T_piece.png"));
             blocks[7] = ImageIO.read(new File("C:\\Users\\sride\\IdeaProjects\\Tetris\\src\\resources\\Z_piece.png"));
-
-        } catch (IOException e) {
+            blocks[8] = ImageIO.read(new File("C:\\Users\\sride\\IdeaProjects\\Tetris\\src\\resources\\I_piece.png"));
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
