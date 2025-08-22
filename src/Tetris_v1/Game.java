@@ -174,16 +174,16 @@ public class Game {
     }
     private boolean placeTPiece(){
         //Check
-        if(board[0][5] != 0)
+        if(board[1][5] != 0)
             return false;
         for(int i=4; i<7; i++)
-            if(board[1][i] != 0)
+            if(board[0][i] != 0)
                 return false;
 
         //Set
-        board[0][5] = Vals.T_PIECE[0];
+        board[1][5] = Vals.T_PIECE[0];
         for(int i=4; i<7; i++)
-            board[1][i] = Vals.T_PIECE[0];
+            board[0][i] = Vals.T_PIECE[0];
         return true;
     }
     private boolean placeZPiece(){
