@@ -17,13 +17,12 @@ public class UI{
     public UI(Game g){
         game = g;//links one ui object to one game object
         play_area = getPlayArea();
-//        next_box = getNextBox();
+        next_box = getNextBox();
         frame = getFrame();
 
-        System.out.println("play_area = " + play_area);
-
         frame.add(play_area);
-//        frame.add(next_box);
+        frame.add(next_box);
+        frame.add(getNextTextBox());
 
         frame.addKeyListener(new KeyAdapter() {
             //relays if keys are held
@@ -66,23 +65,14 @@ public class UI{
     }
     //Converts 2d int array of the board to formatted string
     public void setGameArea(int[][] board){
-        play_area.setGameArea(board);
+        play_area.setGameArea(board, 20, 10);
         play_area.repaint();
     }
     public void setNextBox(int[][] next_array){
-//        StringBuilder sb = new StringBuilder("  NEXT  \n");
-//
-//        for(int[] line: next_array){
-//            for (int c : line) {
-//                if (c==0) sb.append("  ");
-//                else sb.append("[]");
-//            }
-//            sb.append("\n");
-//        }
-//        sb.deleteCharAt(sb.length()-1);
-//        next_box.setText(sb.toString());
+        next_box.setGameArea(next_array, 3, 5);
+        next_box.repaint();
     }
-    public TetrisPanel getPlayArea(){
+    private TetrisPanel getPlayArea(){
         TetrisPanel play_area = new TetrisPanel();
 
         play_area.setFocusable(false);
@@ -90,17 +80,15 @@ public class UI{
         play_area.setBackground(Color.BLACK);
         return play_area;
     }
-    public JTextArea getNextBox(){
-        JTextArea next_box = new JTextArea(4, 4); // rows, columns
-        next_box.setEditable(false);
+    private TetrisPanel getNextBox(){
+        TetrisPanel next_box = new TetrisPanel();
+
         next_box.setFocusable(false);
-        next_box.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 30));
-        next_box.setBounds(1180, 440, 144, 130);
+        next_box.setBounds(1180, 390, 160, 96);
         next_box.setBackground(Color.BLACK);
-        next_box.setForeground(Color.WHITE);
         return next_box;
     }
-    public JFrame getFrame(){
+    private JFrame getFrame(){
         JFrame frame = new JFrame("Tetris");
         frame.setSize(1920, 1080);
         frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -110,6 +98,16 @@ public class UI{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         return frame;
+    }
+    private JTextArea getNextTextBox(){
+        JTextArea next_text_box = new JTextArea();
+        next_text_box.setFocusable(false);
+        next_text_box.setBounds(1180, 320, 160, 80);
+        next_text_box.setFont(new Font("Monospaced", Font.BOLD, 64));
+        next_text_box.setText("NEXT");
+        next_text_box.setBackground(Color.BLACK);
+        next_text_box.setForeground(Color.WHITE);
+        return next_text_box;
     }
     public void crash(){
         frame.dispose();

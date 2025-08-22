@@ -5,8 +5,11 @@ import java.awt.*;
 
 public class TetrisPanel extends JPanel {
     int[][] board;
-    public void setGameArea(int[][] board) {
+    int rows, cols;
+    public void setGameArea(int[][] board, int rows, int cols) {
         this.board = board;
+        this.rows = rows;
+        this.cols = cols;
         repaint();
     }
     @Override
@@ -17,8 +20,8 @@ public class TetrisPanel extends JPanel {
         super.paintComponent(g);
 
         int size = 32;
-        for (int r = 0; r < 20; r++) {
-            for (int c = 0; c < 10; c++) {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
                 int block = board[r][c];
                 if (block != 0) {
                     block %= 100;

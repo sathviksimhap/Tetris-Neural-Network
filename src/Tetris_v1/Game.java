@@ -1,5 +1,7 @@
 package Tetris_v1;
 
+import java.util.Arrays;
+
 /**
  * Responsible for all logic
  * Uses a 2D int array to represent the tetris board
