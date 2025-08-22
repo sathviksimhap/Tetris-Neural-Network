@@ -12,16 +12,27 @@ public class Main {
 
         //Main Game Loop
         new Timer(Vals.FRAME_TIME, e->{
-            long start = System.nanoTime();
+            try {
+                long start = System.nanoTime();
 
-            display.setGameArea(game.getBoard());
-            display.setNextBox(game.getNextBox());
+                display.setGameArea(game.getBoard());
+                display.setNextBox(game.getNextBox());
 
-            long time = (System.nanoTime() - start) / 1_000_000;
-            if (time > Vals.FRAME_TIME) {
-                System.err.println("Error: Frame processing time exceeded limit (" + time + "ms)");
-                display.crash();
-                ((Timer) e.getSource()).stop();
+                long time = (System.nanoTime() - start) / 1_000_000;
+
+                if (time > Vals.FRAME_TIME) {
+                    System.err.println("Error: Frame processing time exceeded limit (" + time + "ms)");
+                    display.crash();
+                    ((Timer) e.getSource()).stop();
+                }
+            }
+            catch(RuntimeException ex){
+                if ("Game Over".equals(ex.getMessage())) {
+                    ((Timer) e.getSource()).stop();
+                    System.out.println("Game Over");
+                }
+                else
+                    throw ex;
             }
         }).start();
     }

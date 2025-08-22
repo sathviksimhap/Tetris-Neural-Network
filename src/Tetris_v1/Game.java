@@ -1,7 +1,5 @@
 package Tetris_v1;
 
-import java.util.Arrays;
-
 /**
  * Responsible for all logic
  * Uses a 2D int array to represent the tetris board
@@ -39,9 +37,6 @@ public class Game {
     public void setRight(boolean b){
         right = b;
     }
-    public void clearBoard(){
-        board = new int[20][10];
-    }
     public boolean noPieceOnBoard(){
         for(int i=0; i<20; i++)
             for(int j=0; j<10; j++)
@@ -51,8 +46,19 @@ public class Game {
     }
     private void processFrame(){
         if(noPieceOnBoard())
-            spawnNextPiece();
+            if(!spawnNextPiece())//either spawns next piece or throws exception
+                throw new RuntimeException("Game Over");
 
+        processInput();
+
+        //Gravity
+        drop += gravity;
+        if(drop > 1){
+            tryDropPiece();
+            drop = 0;
+        }
+    }
+    private void processInput(){
         //Movement
         if(right)
             tryMoveRight();
@@ -78,17 +84,10 @@ public class Game {
         }
         else
             z_held=0;
-
-        //Gravity
-        drop += gravity;
-        if(drop > 1){
-            tryDropPiece();
-            drop = 0;
-        }
     }
-    private void spawnNextPiece(){
+    private boolean spawnNextPiece(){
         int piece = getNextPiece();
-        boolean piece_placed = switch (piece) {
+        return switch (piece) {
             case 1 -> placeIPiece();
             case 2 -> placeJPiece();
             case 3 -> placeLPiece();
@@ -246,8 +245,6 @@ public class Game {
             for(int j=0; j<9 && blocks<4; j++)
                 if((board[i][j]>1 && board[i][j]<100) && (board[i][j+1]==0 || board[i][j+1]<100))
                     loc[blocks++] = new int[]{i, j};
-//        if((board[i][j]>1 && board[i][j]<100) && (board[i+1][j]==0 || board[i+1][j]<100))
-//            loc[blocks++] = new int[]{i, j};
 
         if(blocks==4)doMoveRight(loc);
     }

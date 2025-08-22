@@ -99,12 +99,12 @@ public class UI{
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         return frame;
     }
-    private JTextArea getNextTextBox(){
-        JTextArea next_text_box = new JTextArea();
+    private JLabel getNextTextBox(){
+        JLabel next_text_box = new JLabel("NEXT", SwingConstants.CENTER);
         next_text_box.setFocusable(false);
         next_text_box.setBounds(1180, 320, 160, 80);
         next_text_box.setFont(new Font("Monospaced", Font.BOLD, 64));
-        next_text_box.setText("NEXT");
+        next_text_box.setOpaque(true);
         next_text_box.setBackground(Color.BLACK);
         next_text_box.setForeground(Color.WHITE);
         return next_text_box;
