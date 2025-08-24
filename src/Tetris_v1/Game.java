@@ -13,9 +13,9 @@ import java.util.Arrays;
  *     eg: 61 would be a T-piece rotated by 90 degrees *
  */
 public class Game {
-    boolean left, right, x_key, z_key, clearing;
-    int next_piece = -1, arr = 0, x_held = 0, z_held = 0, clear_delay = 0;
-    int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0;
+    boolean left, right, x_key, z_key, clearing, tetris;
+    int next_piece = (int) (Math.random()*7) + 1, arr = 0, x_held = 0, z_held = 0, clear_delay = 0, required_delay, current_clearing_block;
+    int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0, piece_place_delay = 10;
     double gravity = 0.34, drop = 0;
     int[][] board = new int[20][10];
 
@@ -49,10 +49,19 @@ public class Game {
     private void processFrame(){
         if(tryClearLine()) return;
 
-        if(noPieceOnBoard())
-            if(!spawnNextPiece())//either spawns next piece or throws exception
-                throw new RuntimeException("Game Over");
+        if(noPieceOnBoard()) {
+            if(piece_place_delay > 0) {
+                piece_place_delay--;
+                return;
+            }
+            else {
+                piece_place_delay = 10;
+                if (!spawnNextPiece())//either spawns next piece or throws exception
+                    throw new RuntimeException("Game Over");
+            }
+        }
 
+        processDas();
         processInput();
 
         //Gravity
@@ -63,22 +72,22 @@ public class Game {
         }
     }
     private boolean tryClearLine(){
-        setClearLine();
+        setClearLine();//sets clear delay if set
+
         if(!clearing)
             return false;
 
-        if(clear_delay == 0){
-            doCLearLine();
-            clearing = false;
-            return false;
-        }
-        clear_delay--;
+        if(tetris)
+            doClearTetris();
+        else
+            doClearLine();
+
         return true;
     }
     private void setClearLine(){
         if(clearing) return;
 
-        boolean flag = false;
+        int flag = 0;
         for(int i=19; i>=0; i--){
             int sum = 0;
 
@@ -86,31 +95,81 @@ public class Game {
                 if(board[i][j]>100 && board[i][j]<175) sum++;
 
             if(sum==10){
-                flag = true;
+                flag++;
                 for(int j=0; j<10; j++)
-                    board[i][j] = 180;
+                    board[i][j] += 100;
             }
         }
-        if(flag){
-            clear_delay = Vals.CLEAR_DELAY;
-            clearing = true;
+        if(flag==0) return;
+
+        clear_delay = Vals.LINE_CLEAR_DELAY;
+        required_delay = 14;
+        clearing = true;
+        current_clearing_block = 5;
+
+        if(flag == 4){
+            clear_delay = Vals.LINE_CLEAR_DELAY*2;
+            required_delay = 28;
+            tetris = true;
         }
     }
-    private void doCLearLine(){
+    private void doClearLine(){
+        if(clear_delay == 0){
+            settleBoard();
+            clearing = false;
+            return;
+        }
+        if(clear_delay == required_delay) {
+            required_delay-=3;
+            current_clearing_block--;
+            for (int i = 0; i < 20; i++)
+                if (board[i][current_clearing_block] > 200) {
+                    board[i][current_clearing_block] = 0;
+                    board[i][9-current_clearing_block] = 0;
+                }
+        }
+        clear_delay--;
+    }
+    private void doClearTetris(){
+        if(clear_delay == 0){
+            settleBoard();
+            clearing = false;
+            tetris = false;
+            return;
+        }
+        if(clear_delay == required_delay) {
+            required_delay-=6;
+            current_clearing_block--;
+            for (int i = 0; i < 20; i++)
+                if (board[i][current_clearing_block] > 200) {
+                    board[i][current_clearing_block] = 0;
+                    board[i][9-current_clearing_block] = 0;
+                }
+        }
+        clear_delay--;
+    }
+    private void settleBoard(){
+        for(int i=19; i>= 0; i--){
+            int j = i;
+            while (j >= 0 && Arrays.stream(board[j]).allMatch(x -> x == 0)) j--;
+            if(j<0) break;
 
+            if (i != j) { // <-- the only fix
+                System.arraycopy(board[j], 0, board[i], 0, board[0].length);
+                Arrays.fill(board[j], 0);
+            }
+        }
+    }
+    private void processDas(){
+        //Delayed Auto Shift
+        if(right && piece_moved_right==1 && right_counter>0){
+            right_counter--;
+            return;
+        }
+        if(left && piece_moved_left==1 && left_counter>0)
+            right_counter--;
     }
     private void processInput(){
-        //Movement
-        if(right)
-            tryMoveRight();
-        else
-            stopRight();
-
-        if(left)
-            tryMoveLeft();
-        else
-            stopLeft();
-
         //Rotation
         if(x_key) {
             if (++x_held == 1)
@@ -125,6 +184,17 @@ public class Game {
         }
         else
             z_held=0;
+
+        //Movement
+        if(right)
+            tryMoveRight();
+        else
+            stopRight();
+
+        if(left)
+            tryMoveLeft();
+        else
+            stopLeft();
     }
     private boolean spawnNextPiece(){
         int piece = getNextPiece();
@@ -140,10 +210,6 @@ public class Game {
         };
     }
     private int getNextPiece(){
-        if(next_piece==-1){
-            next_piece = (int) (Math.random()*7) + 1;
-            return (int) (Math.random()*7) + 1;
-        }
         int temp = next_piece;
         next_piece = (int) (Math.random()*7) + 1;
         return temp;
@@ -267,11 +333,6 @@ public class Game {
             board[loc[i][0]+1][loc[i][1]] = piece;
     }
     private void tryMoveRight(){
-        //Delayed Auto Shift
-        if(piece_moved_right==1 && right_counter>0){
-            right_counter--;
-            return;
-        }
         //Auto Repeat Rate
         arr--;
         if(arr>0 && piece_moved_right > 0)
@@ -299,11 +360,6 @@ public class Game {
             board[loc[i][0]][loc[i][1]+1] = piece;
     }
     private void tryMoveLeft(){
-        //Delayed Auto Shift
-        if(piece_moved_left==1 && left_counter>0){
-            left_counter--;
-            return;
-        }
         //Auto Repeat Rate
         arr--;
         if(arr>0 && piece_moved_left > 0)
