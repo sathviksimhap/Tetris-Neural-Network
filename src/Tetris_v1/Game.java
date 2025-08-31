@@ -15,16 +15,19 @@ import java.util.Arrays;
 public class Game {
     boolean left, right, x_key, z_key, clearing, tetris;
     int next_piece = (int) (Math.random()*7) + 1, arr = 0, x_held = 0, z_held = 0, clear_delay = 0, required_delay, current_clearing_block;
-    int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0, piece_place_delay = 10;
-    double gravity = 0.34, drop = 0;
+    int left_counter = 10, right_counter = 10, piece_moved_right = 0, piece_moved_left = 0, piece_place_delay = 10, score = 0, lines_cleared = 0;
+    double gravity = Vals.GRAVITY, drop = 0;
     int[][] board = new int[20][10];
 
-    int[][] getBoard(){
+    public int[][] getBoard(){
         processFrame();
         return board;
     }
-    int[][] getNextBox(){
+    public int[][] getNextBox(){
         return Vals.NEXT_PIECE[next_piece-1];//converting to 0-indexed
+    }
+    public int getScore(){
+        return score;
     }
     //Input state tracking functions
     public void setLeft(boolean b){
@@ -39,7 +42,7 @@ public class Game {
     public void setRight(boolean b){
         right = b;
     }
-    public boolean noPieceOnBoard(){
+    private boolean noPieceOnBoard(){
         for(int i=0; i<20; i++)
             for(int j=0; j<10; j++)
                 if(board[i][j]>0 && board[i][j]<100)
@@ -116,6 +119,8 @@ public class Game {
     private void doClearLine(){
         if(clear_delay == 0){
             settleBoard();
+            score += Vals.LINE_CLEAR_POINTS[lines_cleared/5];
+            lines_cleared = 0;
             clearing = false;
             return;
         }
@@ -126,6 +131,7 @@ public class Game {
                 if (board[i][current_clearing_block] > 200) {
                     board[i][current_clearing_block] = 0;
                     board[i][9-current_clearing_block] = 0;
+                    lines_cleared++;
                 }
         }
         clear_delay--;
@@ -133,6 +139,7 @@ public class Game {
     private void doClearTetris(){
         if(clear_delay == 0){
             settleBoard();
+            score += 25000;
             clearing = false;
             tetris = false;
             return;

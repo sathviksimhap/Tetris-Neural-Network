@@ -4,6 +4,9 @@ public final class  Vals {
     private Vals(){}
 
     public static final int FRAME_TIME = 20, ARR = 4, DAS = 10, LINE_CLEAR_DELAY = 15;
+    public static final double GRAVITY = 0.34;
+
+    public static final int[] LINE_CLEAR_POINTS = {0, 1000, 3000, 10000};
 
     public static final int[] I_PIECE = {10, 11, 12, 13};
     public static final int[] J_PIECE = {20, 21, 22 ,23};

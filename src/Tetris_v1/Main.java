@@ -15,6 +15,7 @@ public class Main {
             try {
                 display.setGameArea(game.getBoard());
                 display.setNextBox(game.getNextBox());
+                display.setScoreBox(game.getScore());
             }
             catch(RuntimeException ex){
                 if ("Game Over".equals(ex.getMessage())) {

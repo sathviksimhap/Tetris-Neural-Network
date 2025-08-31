@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
  */
 public class Display {
     TetrisPanel play_area, next_box;
+    JLabel score_box;
     JFrame frame;
     Game game;
 
@@ -18,10 +19,13 @@ public class Display {
         game = g;//links one ui object to one game object
         play_area = getPlayArea();
         next_box = getNextBox();
+        score_box = getScoreBox();
         frame = getFrame();
 
         frame.add(play_area);
         frame.add(next_box);
+        frame.add(score_box);
+        frame.add(getScoreTextBox());
         frame.add(getNextTextBox());
 
         frame.addKeyListener(new KeyAdapter() {
@@ -72,6 +76,9 @@ public class Display {
         next_box.setGameArea(next_array, 3, 5);
         next_box.repaint();
     }
+    public void setScoreBox(int score){
+        score_box.setText(String.format("%06d", score));
+    }
     private TetrisPanel getPlayArea(){
         TetrisPanel play_area = new TetrisPanel();
 
@@ -87,6 +94,17 @@ public class Display {
         next_box.setBounds(1180, 390, 160, 96);
         next_box.setBackground(Color.BLACK);
         return next_box;
+    }
+    private JLabel getScoreBox(){
+        JLabel score_box = new JLabel("000000");
+
+        score_box.setFocusable(false);
+        score_box.setBounds(940, 80, 160, 60);
+        score_box.setFont(new Font("Monospaced", Font.BOLD, 32));
+        score_box.setOpaque(true);
+        score_box.setBackground(Color.BLACK);
+        score_box.setForeground(Color.WHITE);
+        return score_box;
     }
     private JFrame getFrame(){
         JFrame frame = new JFrame("Tetris");
@@ -108,6 +126,16 @@ public class Display {
         next_text_box.setBackground(Color.BLACK);
         next_text_box.setForeground(Color.WHITE);
         return next_text_box;
+    }
+    private JLabel getScoreTextBox(){
+        JLabel score_text_box = new JLabel("SCORE: ", SwingConstants.CENTER);
+        score_text_box.setFocusable(false);
+        score_text_box.setBounds(780, 80, 160, 60);
+        score_text_box.setFont(new Font("Monospaced", Font.BOLD, 32));
+        score_text_box.setOpaque(true);
+        score_text_box.setBackground(Color.BLACK);
+        score_text_box.setForeground(Color.WHITE);
+        return score_text_box;
     }
     public void crash(){
         frame.dispose();
