@@ -12,6 +12,7 @@ import java.util.Arrays;
  *     1s place tracks rotation
  *     eg: 61 would be a T-piece rotated by 90 degrees *
  */
+//test
 public class Game {
     boolean left, right, x_key, z_key, clearing, tetris;
     int next_piece = (int) (Math.random()*7) + 1, arr = 0, x_held = 0, z_held = 0, clear_delay = 0, required_delay, current_clearing_block;
